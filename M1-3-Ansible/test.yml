@@ -1,0 +1,45 @@
+- name: docker build, push and run with python
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    docker_repo: vassilb/homework
+    docker_tag: homework
+    listen_port: 8080
+
+  tasks:
+    - name: Building
+      #command: docker build -t test:test ../
+      docker_image:
+        name: "{{docker_repo}}"
+        tag: "{{docker_tag}}"
+        source: build
+        build:
+          path: ../
+
+    - name: Login
+      #command: docker login -u vassilb -p password
+      docker_login:
+        username: vassilb
+        password: PASSWORD
+
+#    - name: Tag for DockerHub
+#      #command: docker tag test:test {{docker_repo}}:{{docker_tag}}
+
+    - name: Push to DockerHub
+      #command: docker push {{docker_repo}}:{{docker_tag}}
+      docker_image:
+        name: "{{docker_repo}}:{{docker_tag}}"
+        push: yes
+
+    - name: run locally the docker image
+      #command: docker run --rm --name ansible-test -d -p {{listen_port}}:5000 test:test
+      docker_container:
+        name: ansible-test
+        image: "{{docker_repo}}:{{docker_tag}}"
+        state: started
+        ports:
+          - "{{listen_port}}:5000"
+
+
+
