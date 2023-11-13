@@ -1,4 +1,4 @@
-- name: docker build, push and run with python
+- name: docker build, push and run with python using ansible vault secrets
   hosts: localhost
   gather_facts: no
 
@@ -6,6 +6,9 @@
     docker_repo: vassilb/homework
     docker_tag: homework
     listen_port: 8080
+
+  vars_files:
+    - secrets.yml
 
   tasks:
     - name: Building
@@ -20,8 +23,8 @@
     - name: Login
       #command: docker login -u vassilb -p password
       docker_login:
-        username: vassilb
-        password: PASSWORD
+        username: "{{username}}"
+        password: "{{password}}"
 
 #    - name: Tag for DockerHub
 #      #command: docker tag test:test {{docker_repo}}:{{docker_tag}}
