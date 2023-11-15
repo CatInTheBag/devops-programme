@@ -39,3 +39,11 @@ jobs:
         run: |
           pylint --disable=all --enable=unused-import $(git ls-files 'app/*.py')
 
+      - name: Editorconfig check
+        uses: editorconfig-checker/action-editorconfig-checker@main
+
+      - name: Check files using the black formatter
+        uses: rickstaa/action-black@v1
+        with:
+          black_args: "./app"
+          fail_on_error: true
